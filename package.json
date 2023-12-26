@@ -1,0 +1,41 @@
+{
+  "name": "react-pizza-v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.5",
+    "axios": "^1.6.2",
+    "classnames": "^2.3.2",
+    "lodash.debounce": "^4.0.8",
+    "qs": "^6.11.2",
+    "react": "^18.2.0",
+    "react-content-loader": "^6.2.1",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-paginate": "^8.2.0",
+    "react-redux": "^9.0.4",
+    "react-router-dom": "^6.21.0",
+    "sass": "^1.69.5",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "vite": "^5.0.8"
+  }
+}
