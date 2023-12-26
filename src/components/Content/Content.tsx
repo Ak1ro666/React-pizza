@@ -9,14 +9,14 @@ import { useNavigate } from 'react-router-dom';
 import SkeletonPizzas from '../SkeletonPizzas/SkeletonPizzas';
 import Pagination from '../Pagination/Pagination';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { setPageCount, setFilters, selectSearchValue } from '../../redux/slices/filterSlice';
 import { fetchPizzas } from '../../redux/slices/pizzasSlice';
+import { useAppDispatch } from '../../redux/store';
 
 const Content: React.FC = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	const isSearch = React.useRef(false);
+	const dispatch = useAppDispatch();
 	const isMounted = React.useRef(false);
 	const searchValue = useSelector(selectSearchValue);
 	const {
@@ -27,33 +27,47 @@ const Content: React.FC = () => {
 	const { items: pizzas, status } = useSelector((state: any) => state.pizza);
 
 	const sortProperty = sortType.sortProperty;
-	const category = activeCategory === 0 ? '' : `&category=${activeCategory}`;
-	const search = searchValue ? `&title=*${searchValue.trim()}` : '';
+
 	const onChangePage = (newPage: number) => {
 		dispatch(setPageCount(newPage));
 	};
 
-	const getPizzas = () => {
-		const fetchData = async () => {
-			dispatch(
-				// @ts-ignore
-				fetchPizzas({
-					sortProperty,
-					category,
-					search,
-					currentPage,
-				}),
-			);
-		};
-		fetchData();
+	const getPizzas = async () => {
+		const sortProperty = sortType.sortProperty;
+		const category = activeCategory === 0 ? '' : `&category=${activeCategory}`;
+		const search = searchValue ? `&title=*${searchValue.trim()}` : '';
+
+		dispatch(
+			fetchPizzas({
+				sortProperty,
+				category,
+				search,
+				currentPage,
+			}),
+		);
+		window.scrollTo(0, 0);
 	};
 
-	// Если изменены параметры и был первый рендер, то сохранить данные и отправить их в redux
+	React.useEffect(() => {
+		if (isMounted.current) {
+			const queryString = qs.stringify(
+				{
+					sortProperty: sortType.sortProperty,
+					currentPage,
+					activeCategory,
+				},
+				{ skipNulls: true },
+			);
+			navigate(`?${queryString}`);
+		}
+
+		getPizzas();
+		isMounted.current = true;
+	}, [activeCategory, sortProperty, searchValue, currentPage]);
 
 	React.useEffect(() => {
 		if (window.location.search) {
 			const params = qs.parse(window.location.search.substring(1));
-
 			const sortObj = list.find((el) => el.sortProperty === params.sortProperty);
 
 			dispatch(
@@ -62,37 +76,11 @@ const Content: React.FC = () => {
 					sort: sortObj,
 				}),
 			);
-			isSearch.current = true;
 		}
-	}, []);
-
-	// Если не были изменены параметры и это первый рендер, то запрашиваем данные с сервера
-
-	React.useEffect(() => {
-		window.scrollTo(0, 0);
-
-		if (!isSearch.current) {
-			getPizzas();
-		}
-
-		isSearch.current = false;
 	}, [activeCategory, sortProperty, searchValue, currentPage]);
 
-	// Если параметры были изменены и это не первый рендер, то вшиваем  url параметры в строку поиска
-
-	React.useEffect(() => {
-		if (isMounted.current) {
-			const queryString = qs.stringify({
-				sortProperty: sortType.sortProperty,
-				currentPage,
-				activeCategory,
-			});
-
-			navigate(`?${queryString}`);
-		}
-
-		isMounted.current = true;
-	}, [activeCategory, sortProperty, searchValue, currentPage]);
+	const skeletons = [...new Array(6)].map((_, i) => <SkeletonPizzas key={i} />);
+	const pizzasRender = pizzas.map((el: IPizzaBlock) => <PizzaBlock key={el.id} {...el} />);
 
 	return (
 		<div className='content'>
@@ -124,11 +112,7 @@ const Content: React.FC = () => {
 					</div>
 				)}
 				<div className='content__items'>
-					{status === 'loading'
-						? [...new Array(6)].map((_, i) => <SkeletonPizzas key={i} />)
-						: status === 'success'
-						? pizzas.map((el: IPizzaBlock) => <PizzaBlock key={el.id} {...el} />)
-						: ''}
+					{status === 'loading' ? skeletons : status === 'success' ? pizzasRender : ''}
 				</div>
 			</div>
 			<Pagination currentPage={currentPage} onChange={(newPage: number) => onChangePage(newPage)} />

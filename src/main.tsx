@@ -12,7 +12,7 @@ import Home from './pages/Home';
 
 export type SortItem = {
 	name: string;
-	sortProperty: string;
+	sortProperty: 'price' | '-price' | 'rating' | '-rating' | 'categories' | '-categories';
 };
 
 export const list: SortItem[] = [

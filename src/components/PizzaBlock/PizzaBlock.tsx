@@ -3,7 +3,7 @@ import React from 'react';
 import cn from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { addItem, selectCountItem } from '../../redux/slices/cartSlice';
+import { CartItem, addItem, selectCountItem } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
 
 export interface IPizzaBlock {
@@ -25,13 +25,14 @@ const PizzaBlock: React.FC<IPizzaBlock> = ({ id, imageUrl, title, price, sizes, 
 	const count = countItem?.count || 0;
 
 	const onAddToCart = () => {
-		const item = {
+		const item: CartItem = {
 			id,
 			title,
 			price,
 			imageUrl,
 			type: typeNames[typeActive],
 			size: sizes[sizeActive],
+			count: 0,
 		};
 
 		dispatch(addItem(item));
