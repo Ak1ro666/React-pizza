@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useDispatch } from 'react-redux';
-import { decrementCount, incrementCount, removeItem } from '../../redux/slices/cartSlice';
+import { decrementCount, incrementCount, removeItem } from '../../redux/slices/cart/slice';
 
 export interface ICartItem {
 	id: number;

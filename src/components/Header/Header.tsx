@@ -1,10 +1,11 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/img/pizza-logo.svg';
 import Search from '../Search/Search';
-import React from 'react';
 
 import { useSelector } from 'react-redux';
-import { selectCart } from '../../redux/slices/cartSlice';
+import { useDispatch } from 'react-redux';
+import { selectCart } from '../../redux/slices/cart/selector'
 
 export interface IItem {
 	count: number;
@@ -14,8 +15,22 @@ export interface IItem {
 const Header: React.FC = () => {
 	const { items, totalPrice } = useSelector(selectCart);
 	const location = useLocation();
+	const isMounted = React.useRef(false);
 
 	const totalItems = items.reduce((sum: number, item: IItem) => sum + item.count, 0);
+
+	React.useEffect(() => {
+		if (isMounted.current) {
+			const cartObj = {
+				totalPrice,
+				items,
+			};
+			const cart = JSON.stringify(cartObj);
+			localStorage.setItem('cart', cart);
+		}
+
+		isMounted.current = true;
+	}, [items]);
 
 	return (
 		<div className='header'>

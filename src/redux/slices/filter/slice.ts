@@ -1,23 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-
-type Sort = {
-	name: string;
-	sortProperty: 'price' | '-price' | 'rating' | '-rating' | 'categories' | '-categories';
-};
-
-type NewParamsObjType = {
-	activeCategory: number;
-	currentPage: number;
-	sort: Sort;
-};
-
-interface IFilterSliceState {
-	searchValue: string;
-	activeCategory: number;
-	pageCount: number;
-	sort: Sort;
-}
+import { IFilterSliceState, NewParamsObjType, Sort, SortProperty } from './types';
 
 const initialState: IFilterSliceState = {
 	searchValue: '',
@@ -25,7 +7,7 @@ const initialState: IFilterSliceState = {
 	pageCount: 1,
 	sort: {
 		name: 'Сначало недорогие',
-		sortProperty: 'price',
+		sortProperty: 'price' as SortProperty,
 	},
 };
 
@@ -46,7 +28,7 @@ const filterSlice = createSlice({
 			if (Object.keys(newParamsObj)) {
 				state.activeCategory = Number(newParamsObj.activeCategory);
 				state.pageCount = Number(newParamsObj.currentPage);
-				state.sort.sortProperty = newParamsObj.sort.sortProperty;
+				state.sort.sortProperty = newParamsObj.sortProperty;
 			} else {
 				state.activeCategory = 0;
 				state.pageCount = 1;
@@ -61,8 +43,6 @@ const filterSlice = createSlice({
 		},
 	},
 });
-
-export const selectSearchValue = (state: RootState) => state.filter.searchValue;
 
 export const { setActiveCategory, setSort, setPageCount, setFilters, setSearchValue } =
 	filterSlice.actions;

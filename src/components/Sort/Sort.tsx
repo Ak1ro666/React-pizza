@@ -2,11 +2,11 @@ import React from 'react';
 
 import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSort } from '../../redux/slices/filterSlice';
 
 import { list, SortItem } from '../../main';
+import { setSort } from '../../redux/slices/filter/slice'
 
-const Sort = () => {
+const Sort: React.FC = () => {
 	const sortType = useSelector((state: any) => state.filter.sort);
 	const dispatch = useDispatch();
 	const sortRef = React.useRef<HTMLDivElement>(null);

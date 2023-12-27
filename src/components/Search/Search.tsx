@@ -3,9 +3,10 @@ import styles from './Search.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { IoMdClose } from 'react-icons/io';
 import debounce from 'lodash.debounce';
-import { selectSearchValue, setSearchValue } from '../../redux/slices/filterSlice';
+import { setSearchValue } from '../../redux/slices/filter/slice';
+import { selectSearchValue } from '../../redux/slices/filter/selector';
 
-const Search = () => {
+const Search: React.FC = () => {
 	const dispatch = useDispatch();
 	const searchValue = useSelector(selectSearchValue);
 	const [value, setValue] = React.useState<string>('');
@@ -16,6 +17,14 @@ const Search = () => {
 		setValue('');
 		inputRef.current?.focus();
 	};
+
+	React.useEffect(() => {
+		if (searchValue) {
+			setValue(searchValue);
+		} else {
+			setValue('');
+		}
+	}, []);
 
 	const updateSearchValue = React.useCallback(
 		debounce((value) => {

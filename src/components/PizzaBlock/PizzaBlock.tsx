@@ -3,8 +3,10 @@ import React from 'react';
 import cn from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { CartItem, addItem, selectCountItem } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
+import { selectCountItem } from '../../redux/slices/cart/selector'
+import { CartItem } from '../../redux/slices/cart/types'
+import { addItem } from '../../redux/slices/cart/slice'
 
 export interface IPizzaBlock {
 	id: number;

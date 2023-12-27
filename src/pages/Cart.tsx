@@ -4,9 +4,10 @@ import Layout from '../Layout/Layout';
 
 import { useDispatch, useSelector } from 'react-redux';
 import CartEmpty from '../components/CartEmpty/CartEmpty';
-import { clearItems, selectCart } from '../redux/slices/cartSlice';
 import CartBlock, { ICartItem } from '../components/CartBlock/CartBlock';
 import { IItem } from '../components/Header/Header';
+import { clearItems, removeItem } from '../redux/slices/cart/slice';
+import { selectCart } from '../redux/slices/cart/selector';
 
 const Cart = () => {
 	const dispatch = useDispatch();
@@ -102,9 +103,15 @@ const Cart = () => {
 									</div>
 								</div>
 								<div className='content__items content__items-cart'>
-									{items?.map((el: ICartItem, i: number) =>
-										el.count ? <CartBlock key={i} {...el} /> : '',
-									)}
+									{items
+										? items.map((el: ICartItem, i: number) =>
+												el.count ? (
+													<CartBlock key={i} {...el} />
+												) : (
+													(dispatch(removeItem(el.id)), null)
+												),
+										  )
+										: (dispatch(clearItems()), null)}
 								</div>
 								<div className='cart__bottom'>
 									<div className='cart__bottom-details'>

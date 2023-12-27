@@ -3,16 +3,17 @@ import Categories from '../Categories/Categories';
 import Sort from '../Sort/Sort';
 import PizzaBlock, { IPizzaBlock } from '../PizzaBlock/PizzaBlock';
 import qs from 'qs';
-import { list } from '../../main';
 
 import { useNavigate } from 'react-router-dom';
 import SkeletonPizzas from '../SkeletonPizzas/SkeletonPizzas';
 import Pagination from '../Pagination/Pagination';
 
 import { useSelector } from 'react-redux';
-import { setPageCount, setFilters, selectSearchValue } from '../../redux/slices/filterSlice';
-import { fetchPizzas } from '../../redux/slices/pizzasSlice';
+import { setPageCount, setFilters } from '../../redux/slices/filter/slice';
 import { useAppDispatch } from '../../redux/store';
+import { selectSearchValue } from '../../redux/slices/filter/selector';
+import { SortProperty } from '../../redux/slices/filter/types';
+import { fetchPizzas } from '../../redux/slices/pizza/asyncThunk';
 
 const Content: React.FC = () => {
 	const navigate = useNavigate();
@@ -30,6 +31,12 @@ const Content: React.FC = () => {
 
 	const onChangePage = (newPage: number) => {
 		dispatch(setPageCount(newPage));
+	};
+
+	type ParamsType = {
+		activeCategory: number;
+		currentPage: number;
+		sortProperty: string;
 	};
 
 	const getPizzas = async () => {
@@ -67,13 +74,13 @@ const Content: React.FC = () => {
 
 	React.useEffect(() => {
 		if (window.location.search) {
-			const params = qs.parse(window.location.search.substring(1));
-			const sortObj = list.find((el) => el.sortProperty === params.sortProperty);
+			const params = qs.parse(window.location.search.substring(1)) as unknown as ParamsType;
 
 			dispatch(
 				setFilters({
-					...params,
-					sort: sortObj,
+					activeCategory: Number(params.activeCategory),
+					currentPage: Number(params.currentPage),
+					sortProperty: params.sortProperty as SortProperty,
 				}),
 			);
 		}

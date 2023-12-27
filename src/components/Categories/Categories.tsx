@@ -2,9 +2,9 @@ import React from 'react';
 import cn from 'classnames';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setActiveCategory } from '../../redux/slices/filterSlice';
+import { setActiveCategory } from '../../redux/slices/filter/slice'
 
-const Categories = () => {
+const Categories: React.FC = React.memo(() => {
 	const dispatch = useDispatch();
 	const activeCategory = useSelector((state: any) => state.filter.activeCategory);
 
@@ -30,6 +30,6 @@ const Categories = () => {
 			</ul>
 		</div>
 	);
-};
+});
 
 export default Categories;
