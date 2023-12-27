@@ -2,12 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './scss/app.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import NotFound from './pages/NotFound';
-import Cart from './pages/Cart';
 
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
-import FullPizza from './pages/FullPizza';
 import Home from './pages/Home';
 
 export type SortItem = {
@@ -42,6 +39,10 @@ export const list: SortItem[] = [
 	},
 ];
 
+const Cart = React.lazy(() => import('./pages/Cart'));
+const FullPizza = React.lazy(() => import('./pages/FullPizza'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
+
 const router = createBrowserRouter([
 	{
 		path: '/',
@@ -49,7 +50,11 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/card',
-		element: <Cart />,
+		element: (
+			<React.Suspense fallback={<div>Идёи загрузка корзины...</div>}>
+				<Cart />
+			</React.Suspense>
+		),
 	},
 	{
 		path: '*',
@@ -57,7 +62,11 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '/pizzas/:id',
-		element: <FullPizza />,
+		element: (
+			<React.Suspense fallback={<div>Идёт загрузка страницы...</div>}>
+				<FullPizza />
+			</React.Suspense>
+		),
 	},
 ]);
 
