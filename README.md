@@ -1,5 +1,8 @@
 # React-pizza
 
+Delpoy https://react-pizza-nine-pink.vercel.app
+
+
 Это мой новые проект на React.
 
 # 🛠 Технологии:
